@@ -1,0 +1,146 @@
+---
+title: "New Zealand Jury Pool Map"
+format: html
+editor: visual
+---
+
+## New Zealand Map
+
+```{r}
+library(tidyverse)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggrepel)
+
+# Actual Māori counts from the jury pool table
+jury_pool_actual <- tibble::tribble(
+  ~district,          ~actual_maori,
+  "Whangarei",        28,
+  "Auckland",         74,
+  "Hamilton",         23,
+  "Rotorua",          79,
+  "Gisborne",         23,
+  "Napier",           15,
+  "New Plymouth",      4,
+  "Palmerston North",  7,
+  "Wellington",       28,
+  "Nelson",            1,
+  "Christchurch",     11,
+  "Dunedin",           4,
+  "Invercargill",      3
+)
+
+# Approximate city-center coordinates
+district_coordinates <- tibble::tribble(
+  ~district,          ~longitude, ~latitude,
+  "Whangarei",        174.32,     -35.73,
+  "Auckland",         174.76,     -36.85,
+  "Hamilton",         175.28,     -37.78,
+  "Rotorua",          176.25,     -38.14,
+  "Gisborne",         178.02,     -38.66,
+  "Napier",           176.91,     -39.49,
+  "New Plymouth",     174.08,     -39.06,
+  "Palmerston North", 175.61,     -40.36,
+  "Wellington",       174.78,     -41.29,
+  "Nelson",           173.28,     -41.27,
+  "Christchurch",     172.63,     -43.53,
+  "Dunedin",          170.50,     -45.87,
+  "Invercargill",     168.35,     -46.41
+)
+
+# Join counts and coordinates
+jury_map_data <- jury_pool_actual |>
+  left_join(district_coordinates, by = "district")
+
+# Convert locations to spatial points
+jury_sf <- jury_map_data |>
+  st_as_sf(
+    coords = c("longitude", "latitude"),
+    crs = 4326,
+    remove = FALSE
+  )
+
+# New Zealand outline
+new_zealand <- ne_countries(
+  country = "New Zealand",
+  scale = "medium",
+  returnclass = "sf"
+)
+
+# Map
+jury_pool_map <- ggplot() +
+  geom_sf(
+    data = new_zealand,
+    fill = "grey95",
+    color = "grey40",
+    linewidth = 0.4
+  ) +
+  geom_sf(
+    data = jury_sf,
+    aes(
+      size = actual_maori
+    ),
+    alpha = 0.4,
+    color = "darkblue"
+  ) +
+  geom_text_repel(
+    data = jury_map_data,
+    aes(
+      x = longitude,
+      y = latitude,
+      label = paste0(district, "\n", actual_maori)
+    ),
+    size = 3.4,
+    min.segment.length = 0,
+    box.padding = 0.4,
+    point.padding = 0.3,
+    max.overlaps = Inf,
+    seed = 123
+  ) +
+  scale_size_continuous(
+    range = c(2.5, 9),
+    guide = "none"
+  ) +
+  coord_sf(
+    xlim = c(166, 179.5),
+    ylim = c(-47.5, -34),
+    expand = FALSE
+  ) +
+  labs(
+    title = "Number of Māori in the Jury Pool in 1993 Survey",
+    subtitle = "Counts are shown for each New Zealand jury district",
+    caption = "Source: Trial By Peers."
+  ) +
+  theme_void(base_size = 12) +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 17
+    ),
+    plot.subtitle = element_text(
+      size = 11,
+      margin = margin(b = 10)
+    ),
+    legend.position = "right",
+    plot.caption = element_text(
+      hjust = 0,
+      color = "grey35",
+      margin = margin(t = 10)
+    )
+  )
+
+jury_pool_map
+```
+```{r}
+ggsave(
+  "plots/actual_maori_jury_pool_map.png",
+  plot = jury_pool_map,
+  width = 4,
+  height = 6.5,
+  units = "in",
+  dpi = 300,
+  bg = "white"
+)
+```
+
