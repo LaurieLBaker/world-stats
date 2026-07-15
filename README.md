@@ -19,7 +19,7 @@ Explore how different ways of summarizing data can lead to different conclusions
 
 **Interactive webR tutorial**
 
-https://world-stats.github.io/maori/simpsons-paradox.html
+[Simpson's Paradox](https://world-stats.github.io/maori/simpsons-paradox.html)
 
 
 ## Contributing
