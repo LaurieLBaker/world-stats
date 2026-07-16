@@ -25,9 +25,9 @@ execute:
 
 ## Activity Introduction
 
-In 1993, the New Zealand Department of Justice surveyed jury pools across the country to examine the representation of Māori, the Indigenous people of New Zealand. The survey covered all potential jurors who arrived at court during a period in September and October 1993. Nationally, Māori made up 9.5% of the eligible population and 10.1% of the jury pool, suggesting that Māori were adequately represented. In this activity, we'll investigate whether this overall conclusion changes when we examine the data by region.
+In 1993, the New Zealand Department of Justice surveyed jury pools across the country to examine the representation of Māori, the Indigenous people of New Zealand. The survey covered all potential jurors who arrived at court during a period in September and October 1993. Nationally, Māori made up 9.5% of the eligible population and 10.1% of the jury pool, suggesting that Māori were adequately represented (Dunstan, Paulin, and Atkinson 1995). In this activity, we'll investigate whether this overall conclusion changes when we examine the data by region.
 
-![](plots/actual_maori_jury_pool_map.png){fig-alt="Number of Māori in regional jury district pools surveyed in 1993. Major urban areas like Auckalnd and Rotorua have the highest number of Māori in the jury pool with 74 and 79 Māori respectively." fig-align="center"}
+![](plots/actual_maori_jury_pool_map.png){fig-alt="Number of Māori in regional jury district pools surveyed in 1993. Major urban areas like Auckland and Rotorua have the highest number of Māori in the jury pool with 74 and 79 Māori respectively." fig-align="center"}
 
 ## Learning Objectives
 
@@ -59,11 +59,6 @@ This activity also introduces **Simpson's paradox**, a phenomenon in which an ov
 
 Simpson's paradox can occur when we study the relationship between two variables but ignore an important third variable.
 
-In this activity:
-
--   The **response variable** is whether someone is in the jury pool.
--   The main **explanatory variable** is whether someone is Māori.
-
 Simpson's paradox reminds us that:
 
 -   Not considering an important variable can distort the relationship we see.
@@ -72,7 +67,7 @@ Simpson's paradox reminds us that:
 
 ## Part 1: Getting to know the data
 
-The table below contains the number of Māori in the jury pool and the total number of people in the jury pool for each New Zealand jury district. These data come from *Trial By Peers* (Dunstan, Paulin, and Atkinson 1995), a nationwide survey of jury pools conducted in 1993.
+The table below contains the number of Māori in the jury pool and the total number of people in the jury pool for each New Zealand jury district. These data come from *Trial By Peers* (Dunstan, Paulin, and Atkinson 1995), a nationwide survey of jury pools conducted from September to October in 1993.
 
 ```{r load_packages}
 library(tidyverse)
@@ -97,6 +92,7 @@ district_jury <- tribble(
   "Invercargill",    3,        62
 )
 
+head(district_jury)
 ```
 
 Notice that the table gives the number of Māori in each jury pool, but it does not report the number of non-Māori.
@@ -118,9 +114,7 @@ head(district_jury)
 
 ### Exercise 2
 
-How many people were surveyed altogether?
-
-Complete the code below.
+How many people were surveyed altogether? Complete the code below.
 
 ```{webr jury_totals}
 #| exercise.setup: 
@@ -162,12 +156,13 @@ district_jury_summary <- district_jury |>
     maori_pct = round(maori_pct, 1)
   )
 
+district_jury_summary
 ```
 
 ::: callout-tip
 ### Question
 
-At the national level, does Māori representation appear to match the eligible population?
+At the national level, does Māori representation in the jury pool appear to be higher, lower, or the same as their percentage of the eligible popluation?
 :::
 
 
@@ -178,10 +173,10 @@ The national percentage summarizes all districts together. However, jury pools a
 ::: callout-tip
 ### Reflection
 
-From the reading, can you think of a few reasons why jury pools might be selected unequally?
+From the chapter introduction, can you think of a few reasons why there could be regional variation in district jury selection?
 :::
 
-Calculate the percentage of each jury pool that identified as Māori by filling in the blank
+Calculate the percentage of each district jury pool that identified as Māori by filling in the blank
 
 ```{webr calculate_pct_maori}
 #| exercise.setup: 
@@ -191,20 +186,10 @@ district_summary <- district_jury |>
   mutate(
     jury_maori_pct = (_____ / n_jury_pool) * 100
   )
+
+district_summary
 ```
 
-Round the percentages to one decimal place.
-
-```{webr round pct maori}
-#| exercise.setup: 
-#|   - load_data
-#|   - non_maori
-#|   - calculate_pct_maori
-district_summary <- district_summary |>
-  mutate(
-    jury_maori_pct = round(jury_maori_pct, 1)
-  )
-```
 
 ### Exercise 4
 
@@ -217,7 +202,7 @@ Arrange the districts from the highest to the lowest percentage of Māori in the
 #|   - calculate_pct_maori
 
 district_summary |>
-  arrange(________, desc = TRUE)
+  arrange(desc(________))
 ```
 
 -   Which district has the highest percentage?
@@ -225,30 +210,30 @@ district_summary |>
 
 ### Exercise 5
 
-Create a bar chart showing the percentage of Māori in the jury pool for each district.
+Let's create a bar chart showing the percentage of Māori in the jury pool for each district. Try commenting and uncommenting (adding or removing a `#`) the two options for the x axis below. Which one helps us see the districts with the highest māori jury percentage?
 
 ```{webr pct maori bar chart}
 #| exercise.setup: 
+#|   - load_packages
 #|   - load_data
 #|   - non_maori
 #|   - calculate_pct_maori
-
 district_summary |>
   ggplot(aes(
-    x = fct_reorder(district, jury_maori_pct),
+    # x = fct_reorder(district, jury_maori_pct),
+    x = district,
     y = jury_maori_pct
   )) +
   geom_col() +
-  coord_flip()
+  coord_flip() +
+  labs(y = "Jury District")
 ```
-
--   What patterns do you notice?
 
 ## Part 3: Comparing the percentages to the eligible population
 
-Westbrooke (1998) compared these jury pool percentages to the percentage of Māori in the eligible population (ages 20–64) from the 1991 New Zealand Census.
+Westbrooke (1998) compared these jury pool percentages to the percentage of Māori in the eligible population (ages 20–64) from the 1991 New Zealand Census. The eligible population Westbrooke calculated in each district is given below. 
 
-```{webr load district census}
+```{webr load_district_census}
 
 district_census <- tribble(
   ~district,         ~eligible_maori_pct,
@@ -268,7 +253,7 @@ district_census <- tribble(
 )
 ```
 
-We can easily do this and calculate the shortfall by joining our two datasets together
+We can use these data to calculate the expected number of individuals and compare this to the numebr of observed by joining our two datasets together.
 
 ::: callout-note
 ### Joining datasets
@@ -282,7 +267,13 @@ In this example, each row represents a jury district, so the district name serve
 
 Can you identify the key variable that will link our datasets?
 
-```{webr join summary and census}
+```{webr join_summary_census}
+#| exercise.setup: 
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
 district_summary <- district_summary |>
   left_join(district_census, by = ______)
 ```
@@ -296,18 +287,34 @@ Let's take a look at the combined data. Note that there are now two percentages 
 
 Add a new variable called `difference` that measures the difference between these two percentages.
 
-```{webr calculate difference between observed and expected}
+```{webr difference_observed_expected}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
 district_summary <- district_summary |>
   mutate(
     difference = ________ - ________
   )
 ```
 
-**Questions** - What does a positive value of difference mean? - What does a negative value mean? - Which district has the largest difference?
+**Questions** 
+- What does a positive value of difference mean? 
+- What does a negative value mean? 
+- Which district has the largest difference?
 
 ## Visualizing the differences
 
 ```{webr eligible vs actual}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
 ggplot(
   district_summary,
   aes(
@@ -335,9 +342,19 @@ ggplot(
 
 The dashed line represents perfect representation.
 
-**Questions** - What does it mean for a point to lie on the dashed line? - What does it mean for a point to lie below the dashed line? - Do you notice an overall pattern?
+**Questions** 
+- What does it mean for a point to lie on the dashed line? 
+- What does it mean for a point to lie below the dashed line? 
+- Do you notice an overall pattern?
 
 ```{webr view the district summary}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
 district_summary
 ```
 
@@ -354,6 +371,13 @@ This requires translating a percentage into an expected count.
 Calculate the expected number of Māori in each district.
 
 ```{webr calculate expected numbers}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
 district_summary <- district_summary |>
   mutate(
     expected_maori =
@@ -366,7 +390,14 @@ district_summary <- district_summary |>
 
 Now compare the number of Māori observed in the jury pool with the expected number.
 
-```{webr calculate the shortfall}
+```{webr calculate_shortfall}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
 district_summary <- district_summary |>
   mutate(
     shortfall = ________ - ________
@@ -378,6 +409,14 @@ Which district has the largest shortfall in terms of number of individuals?
 ### Visualization
 
 ```{webr visualize the expected}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
+#|   - calculate_shortfall
 district_summary |>
   select(
     district,
@@ -559,3 +598,10 @@ In this case, examining the data at a lower level of aggregation reveals that th
 -   Would the national result be the same if every district were given equal weight?
 -   Which conclusion is more useful for evaluating representation: the national percentage, the district-level percentages, or both?
 -   What information is lost when all districts are combined into a single national statistic?
+
+### References
+
+Dunstan, S., Paulin, J., and Atkinson, K. (1995), Trial By Peers? The Composition of New Zealand Juries, *Wellington: Department of Justice.*
+
+Westbrooke, I. (1998) Simpson’s Paradox: An Example in a New Zealand Survey of Jury Composition, *CHANCE*, 11:2, 40-42, DOI: 10.1080/09332480.1998.10542093
+
