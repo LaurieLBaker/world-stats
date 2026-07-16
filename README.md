@@ -1,6 +1,6 @@
 # World Stats: International and Ethical Statistics Learning Activities
 
-Welcome to **World Stats**, a collection of open educational resources (OER) designed to teach statistics through real-world international datasets and socially meaningful questions.
+Welcome to *World Stats*, a collection of open educational resources (OER) designed to teach statistics through real-world international datasets and socially meaningful questions.
 This repo is the Github home of the learning activities for the Pressbooks World Stats handbook which contains reflection and coding activities in statistics.
 
 ## Goals
@@ -19,7 +19,7 @@ Explore how different ways of summarizing data can lead to different conclusions
 
 **Interactive webR tutorial**
 
-https://world-stats.github.io/maori/simpsons-paradox.html
+[Simpson's Paradox Tutorial](maori/simpsons-paradox.html)
 
 
 ## Contributing
