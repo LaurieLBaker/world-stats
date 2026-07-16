@@ -481,7 +481,16 @@ or 4% of the national calculation.
 
 Calculate the influence of each district.
 
-```{webr calculate influence}
+```{webr calculate_influence}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
+#|   - calculate_shortfall
+
 district_summary <- district_summary |>
   mutate(
     influence =
@@ -493,7 +502,16 @@ district_summary <- district_summary |>
 
 Multiply by 100 to express the influence as a percentage.
 
-```{webr convert to percentage}
+```{webr convert_percentage}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
+#|   - calculate_shortfall
+#|   - calculate_influence
 district_summary <- district_summary |>
   mutate(
     influence_pct =
@@ -505,6 +523,16 @@ district_summary <- district_summary |>
 Take a look at the results.
 
 ```{webr view results}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
+#|   - calculate_shortfall
+#|   - calculate_influence
+#|   - convert_percentage
 district_summary |>
   select(
     district,
@@ -515,7 +543,10 @@ district_summary |>
 
 ```
 
-**Questions** - Which district contributes the largest share of the national jury pool? - Which district contributes the smallest share? - Are all districts equally influential?
+**Questions** 
+- Which district contributes the largest share of the national jury pool? 
+- Which district contributes the smallest share? 
+- Are all districts equally influential?
 
 ## Visualizing district influence
 
@@ -523,9 +554,17 @@ Let's visualize how much each district contributes to the national statistic.
 
 ```{webr visualize influence}
 # install.packages("waffle")
-
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
+#|   - calculate_shortfall
+#|   - calculate_influence
+#|   - convert_percentage
 library(waffle)
-library(tidyverse)
 
 district_summary |>
   mutate(
@@ -564,6 +603,16 @@ This observation provides an important clue for understanding Simpson's paradox.
 Compare the simple average of the district percentages with the national percentage.
 
 ```{webr calculate simple average}
+#|   - load_packages
+#|   - load_data
+#|   - non_maori
+#|   - calculate_pct_maori
+#|   - load_district_census
+#|   - join_summary_census
+#|   - difference_observed_expected
+#|   - calculate_shortfall
+#|   - calculate_influence
+#|   - convert_percentage
 district_summary |>
   summarize(
     average_district_pct = mean(jury_maori_pct),
