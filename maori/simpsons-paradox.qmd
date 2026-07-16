@@ -288,6 +288,7 @@ Let's take a look at the combined data. Note that there are now two percentages 
 Add a new variable called `difference` that measures the difference between these two percentages.
 
 ```{webr difference_observed_expected}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -308,6 +309,7 @@ district_summary <- district_summary |>
 ## Visualizing the differences
 
 ```{webr eligible vs actual}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -348,6 +350,7 @@ The dashed line represents perfect representation.
 - Do you notice an overall pattern?
 
 ```{webr view the district summary}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -371,6 +374,7 @@ This requires translating a percentage into an expected count.
 Calculate the expected number of Māori in each district.
 
 ```{webr calculate expected numbers}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -391,6 +395,7 @@ district_summary <- district_summary |>
 Now compare the number of Māori observed in the jury pool with the expected number.
 
 ```{webr calculate_shortfall}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -409,6 +414,7 @@ Which district has the largest shortfall in terms of number of individuals?
 ### Visualization
 
 ```{webr visualize the expected}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -482,6 +488,7 @@ or 4% of the national calculation.
 Calculate the influence of each district.
 
 ```{webr calculate_influence}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -503,6 +510,7 @@ district_summary <- district_summary |>
 Multiply by 100 to express the influence as a percentage.
 
 ```{webr convert_percentage}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -523,6 +531,7 @@ district_summary <- district_summary |>
 Take a look at the results.
 
 ```{webr view results}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -554,6 +563,7 @@ Let's visualize how much each district contributes to the national statistic.
 
 ```{webr visualize influence}
 # install.packages("waffle")
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
@@ -603,6 +613,7 @@ This observation provides an important clue for understanding Simpson's paradox.
 Compare the simple average of the district percentages with the national percentage.
 
 ```{webr calculate simple average}
+#| exercise.setup: 
 #|   - load_packages
 #|   - load_data
 #|   - non_maori
