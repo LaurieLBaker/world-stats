@@ -604,11 +604,11 @@ Several of the larger jury pools were located in districts with relatively high 
 
 ### A question of influence
 
-How much influence does each district have?
+> How much influence does each district have?
 
 So far, we have compared each district individually. However, when we calculated the national percentage, we combined all of the districts together.
 
-Does every district contribute equally to the national result?
+> Does every district contribute equally to the national result?
 
 The answer is no.
 
@@ -682,33 +682,46 @@ district_summary |>
 Let's visualize how much each district contributes to the national statistic.
 
 ```{webr visualize influence}
-# install.packages("waffle")
 #| exercise.setup:
 #|   - part5_setup
 #|   - calculate_influence
 #|   - convert_percentage
-library(waffle)
-
 district_summary |>
   mutate(
-    influence_pct = round(influence_pct)
+    district = forcats::fct_reorder(district, influence_pct),
+    highlight = influence_pct >= 10
   ) |>
-  arrange(desc(influence_pct)) |>
-  with(
-    waffle(
-      parts = setNames(influence_pct, district),
-      rows = 10,
-      size = 0.8,
-      colors = scales::viridis_pal(option = "D")(13),
-      title = "Each District's Contribution to the National Jury Pool"
-    )
+  ggplot(aes(
+    x = district,
+    y = influence_pct,
+    fill = highlight
+  )) +
+  geom_col(width = 0.8) +
+  coord_flip() +
+  geom_text(
+    aes(label = paste0(round(influence_pct, 1), "%")),
+    hjust = -0.15,
+    size = 3.5
+  ) +
+  scale_fill_manual(
+    values = c(
+      "TRUE" = "#2C7FB8",
+      "FALSE" = "grey80"
+    ),
+    guide = "none"
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.08))
   ) +
   labs(
-    subtitle = "Each square represents approximately 1% of the national jury pool.",
-    caption = "Larger jury pools contribute more heavily to the national statistic."
+    title = "How Much Does Each District Contribute?",
+    subtitle = "Districts contributing at least 10% of the national jury pool are highlighted.",
+    x = NULL,
+    y = "Contribution to national jury pool (%)"
   ) +
+  theme_minimal(base_size = 14) +
   theme(
-    legend.position = "right",
+    panel.grid.major.y = element_blank(),
     plot.title = element_text(face = "bold")
   )
 ```
@@ -717,29 +730,9 @@ district_summary |>
 
 Notice that Auckland contributes a much larger share of the national jury pool than Gisborne or Nelson. This means that Auckland's jury pool has much more influence on the national percentage than those smaller districts.
 
-The national percentage is therefore not the average of the district percentages. Instead, it is a weighted average, where districts with larger jury pools contribute more heavily to the overall result.
+The national percentage is therefore not the average of the district percentages. Instead, it is a **weighted average**, where districts with larger jury pools contribute more heavily to the overall result.
 
 This observation provides an important clue for understanding Simpson's paradox. If districts with the greatest influence also have different demographic compositions than smaller districts, then the national percentage may tell a different story than the district-level percentages.
-
-### Exercise 10
-
-Compare the simple average of the district percentages with the national percentage.
-
-```{webr calculate simple average}
-#| exercise.setup: part5_setup
-district_summary |>
-  summarize(
-    average_district_pct = mean(jury_maori_pct),
-    national_pct = sum(n_maori) / sum(n_jury_pool) * 100
-  )
-```
-
-**Questions**
-
--   Why are these two percentages different?
--   Which calculation gives every district equal influence?
--   Which calculation gives larger districts more influence?
--   Which calculation would you use if your goal were to understand representation within districts? Which would you use if your goal were to understand representation across all potential jurors?
 
 ## Part 7. Final Conclusions
 
