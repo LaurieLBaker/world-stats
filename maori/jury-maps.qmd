@@ -110,9 +110,9 @@ jury_pool_map <- ggplot() +
   labs(
     title = "Number of Māori in the Jury Pool in 1993 Survey",
     subtitle = "Counts are shown for each New Zealand jury district",
-    caption = "Source: Trial By Peers."
+    caption = "Source: Trial By Peers (Dunstan, Paulin, and Atkinson 1995)."
   ) +
-  theme_void(base_size = 12) +
+  theme_void(base_size = 10) +
   theme(
     plot.title = element_text(
       face = "bold",

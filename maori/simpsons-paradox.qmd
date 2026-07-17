@@ -1,7 +1,7 @@
 ---
 title: "Māori Jury Representation: Simpson's Paradox"
 format: live-html
-date: "07/05/2024"
+date: "07/01/2026"
 date-modified: today
 date-format: long
 author:
